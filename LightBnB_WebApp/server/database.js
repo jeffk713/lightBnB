@@ -115,13 +115,13 @@ const getAllProperties = function (options, limit = 10) {
   }
 
   if (options.owner_id) {
-    queryParams.push(`%${options.owner_id}%`);
+    queryParams.push(options.owner_id);
     queryString += `AND p.owner_id = $${queryParams.length} `;
   }
 
   if (options.minimum_price_per_night && options.maximum_price_per_night) {
-    queryParams.push(`%${options.minimum_price_per_night}%`);
-    queryParams.push(`%${options.maximum_price_per_night}%`);
+    queryParams.push(options.minimum_price_per_night * 100);
+    queryParams.push(options.maximum_price_per_night * 100);
     queryString += `
       AND p.cost_per_night >= $${queryParams.length - 1} 
       AND p.cost_per_night <= $${queryParams.length} 
@@ -130,7 +130,7 @@ const getAllProperties = function (options, limit = 10) {
   queryString += 'GROUP BY p.id ';
 
   if (options.minimum_rating) {
-    queryParams.push(`%${options.minimun_rating}%`);
+    queryParams.push(options.minimum_rating);
     queryString += `
     HAVING AVG(pr.rating) >= $${queryParams.length} `;
   }
